@@ -1,1 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>J.A.R.V.I.S. // MK-VII HUD</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="hud-container">
+    <!-- Top Header & API Key Section -->
+    <header class="hud-header">
+      <div class="brand-row">
+        <span class="hud-title">J.A.R.V.I.S. // MK-VII</span>
+        <span class="hud-status" id="systemStatus">ONLINE</span>
+      </div>
 
+      <div id="api-key-section" class="api-bar">
+        <input
+          type="password"
+          id="apiKeyInput"
+          placeholder="Paste Gemini API Key..."
+          autocomplete="off"
+        />
+        <button id="saveKeyBtn" type="button" onclick="saveApiKey()">Save Key</button>
+      </div>
+
+      <button
+        id="changeKeyBtn"
+        type="button"
+        class="change-key-btn"
+        onclick="resetApiKey()"
+        style="display: none;"
+      >
+        API Key
+      </button>
+    </header>
+
+    <!-- Center Arc Reactor / HUD Ring -->
+    <section class="reactor-section">
+      <div class="arc-outer">
+        <div class="arc-ring"></div>
+        <div class="arc-core" id="reactorCore">
+          <span id="reactorLabel">STANDBY</span>
+        </div>
+      </div>
+      <p class="wake-hint">SAY "HEY JARVIS" OR ENTER COMMAND</p>
+    </section>
+
+    <!-- Compact Middle Comment / Log Box -->
+    <section class="log-wrapper">
+      <div class="log-header">
+        <span>HUD LOG</span>
+        <button type="button" class="clear-btn" onclick="clearLog()">CLEAR</button>
+      </div>
+      <div id="logBox" class="log-box" aria-live="polite">
+        <div class="msg sys">J.A.R.V.I.S. HUD initialized. Enter API key to begin.</div>
+      </div>
+    </section>
+
+    <!-- Bottom Controls & Command Input -->
+    <footer class="hud-footer">
+      <div class="action-row">
+        <button id="wakeBtn" type="button" class="hud-btn wake-btn" onclick="toggleWakeMode()">
+          WAKE: OFF
+        </button>
+        <button id="speakBtn" type="button" class="hud-btn speak-btn" onclick="startManualListen()">
+          SPEAK
+        </button>
+      </div>
+
+      <form class="command-row" onsubmit="handleCommandSubmit(event)">
+        <input
+          type="text"
+          id="commandInput"
+          placeholder="Type command (e.g., set timer 2 min, open youtube)..."
+          autocomplete="off"
+        />
+        <button id="sendBtn" type="submit" class="hud-btn send-btn">SEND</button>
+      </form>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
