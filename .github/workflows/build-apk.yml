@@ -40,9 +40,16 @@ jobs:
           EOF
           cd jarvis-android
           npm init -y
-          npm install @capacitor/core @capacitor/cli @capacitor/android
+          npm install @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6
           npx cap init "J.A.R.V.I.S" "com.bhanubtech.jarvis" --web-dir=www
           npx cap add android
+          node -e '
+            const fs = require("fs");
+            const gradlePath = "android/app/build.gradle";
+            let content = fs.readFileSync(gradlePath, "utf8");
+            const fixBlock = `\nconfigurations.all {\n    exclude group: "org.jetbrains.kotlin", module: "kotlin-stdlib-jdk7"\n    exclude group: "org.jetbrains.kotlin", module: "kotlin-stdlib-jdk8"\n}\n`;
+            fs.writeFileSync(gradlePath, content + fixBlock);
+          '
 
       - name: Build Debug APK
         run: |
