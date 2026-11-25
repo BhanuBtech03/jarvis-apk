@@ -13,23 +13,18 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Set up Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '21'
 
       - name: Create Capacitor Android Project
         run: |
-          mkdir -p jarvis-android
-          cd jarvis-android
-          npm init -y
-          npm install @capacitor/core @capacitor/cli @capacitor/android
-          npx cap init "J.A.R.V.I.S" "com.bhanubtech.jarvis" --web-dir=www
-          mkdir -p www
-          cat << 'EOF' > www/index.html
+          mkdir -p jarvis-android/www
+          cat << 'EOF' > jarvis-android/www/index.html
           <!DOCTYPE html>
           <html>
           <head>
@@ -43,6 +38,10 @@ jobs:
           </body>
           </html>
           EOF
+          cd jarvis-android
+          npm init -y
+          npm install @capacitor/core @capacitor/cli @capacitor/android
+          npx cap init "J.A.R.V.I.S" "com.bhanubtech.jarvis" --web-dir=www
           npx cap add android
 
       - name: Build Debug APK
@@ -56,4 +55,3 @@ jobs:
         with:
           name: jarvis-apk
           path: jarvis-android/android/app/build/outputs/apk/debug/app-debug.apk
-
