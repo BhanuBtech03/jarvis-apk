@@ -1,0 +1,58 @@
+name: Build Jarvis APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Create Capacitor Android Project
+        run: |
+          mkdir -p jarvis-android
+          cd jarvis-android
+          npm init -y
+          npm install @capacitor/core @capacitor/cli @capacitor/android
+          npx cap init "J.A.R.V.I.S" "com.bhanubtech.jarvis" --web-dir=www
+          mkdir -p www
+          cat << 'EOF' > www/index.html
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+              html, body, iframe { margin:0; padding:0; width:100%; height:100%; border:0; background:#000; }
+            </style>
+          </head>
+          <body>
+            <iframe src="https://bhanubtech03.github.io/jarvis" allow="microphone; camera; clipboard-read; clipboard-write"></iframe>
+          </body>
+          </html>
+          EOF
+          npx cap add android
+
+      - name: Build Debug APK
+        run: |
+          cd jarvis-android/android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: jarvis-apk
+          path: jarvis-android/android/app/build/outputs/apk/debug/app-debug.apk
